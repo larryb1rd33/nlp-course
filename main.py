@@ -1,5 +1,6 @@
 from dotenv import load_dotenv
 
+from artifacts.pdf import Pdf
 from chat.txt_extractor import TxtExtractor
 from config import ConfigManager
 
@@ -25,9 +26,18 @@ if __name__ == '__main__':
     try:
         load_dotenv()
 
+        #extractor = TxtExtractor()
+        #extraction_result = extractor.extract(all_chunks)
+        #print(extraction_result)
+
+        pdf = Pdf(ConfigManager().pdf_file_path)
+        text = pdf.extract_text()
         extractor = TxtExtractor()
-        extraction_result = extractor.extract(all_chunks)
-        print(extraction_result)
+        extraction_result = extractor.extract(text)
+        print(extraction_result.response_metadata["token_usage"])
+
+
+
     except Exception as e:
         print("oops")
         print(f"Error: {str(e)}")

@@ -69,11 +69,14 @@ class TxtExtractor:
     def __init__(self):
         self.model = ChatOpenAI(model=ConfigManager().openai_llm)
         self.prompt = ChatPromptTemplate.from_template(PROMPT_TEMPLATE)
-        self.chain = self.prompt | self.model | StrOutputParser()
+        self.chain = self.prompt | self.model #| StrOutputParser()
+
 
     @validate_args({"context": str})
     def extract(self, context: str):
-        return self.chain.invoke({"CONTEXT": context})
+        response = self.chain.invoke({"CONTEXT": context})
+        token_usage = response['usage']['total_tokens']
+        return response['text'], token_usage
 
 
 #TODO: Quick and dirty test -> refactor
